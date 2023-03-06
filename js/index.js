@@ -4,9 +4,13 @@ const WIDTH = 150;
 const HEIGHT = 150;
 const POINT_AMOUNT = 10;
 const POINT_POS = 0;
-const ANIMATE = false;
-const SHOW_CENTER = false;
+let ANIMATE = false;
+let SHOW_CENTER = false;
 let z = 0;
+
+if (document.querySelector('.show-center').checked) {
+  SHOW_CENTER = true;
+}
 
 const canvas = document.querySelector('#canvas');
 canvas.width = WIDTH;
@@ -21,6 +25,8 @@ for (let i = 0; i < POINT_AMOUNT; i++) {
 function draw() {
   if (canvas.getContext) {
     const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     // if (z === WIDTH) z = 0;
     // else z += 2;
@@ -60,10 +66,15 @@ function draw() {
 
       requestAnimationFrame(draw);
     }
+    console.log('dw');
+
   }
 }
 
 draw();
+
+const generateBtn = document.querySelector('.generate-btn');
+generateBtn.addEventListener('click', draw);
 
 // Util functions
 function random(max) {

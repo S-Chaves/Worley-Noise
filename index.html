@@ -8,8 +8,13 @@
     <link rel="stylesheet" href="css/index.css" />
   </head>
   <body>
+    <h1 class="title">Worley Noise</h1>
     <div class="container">
-      <h1>Worley Noise</h1>
+      <div class="config">
+        <label for="show-center">Show centers</label>
+        <input type="checkbox" class="show-center" />
+        <button class="generate-btn">Generate!</button>
+      </div>
       <canvas id="canvas" width="500" height="500">
         If you can see this, canvas tag is not supported on your browser.
       </canvas>
