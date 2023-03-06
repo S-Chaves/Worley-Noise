@@ -8,10 +8,6 @@ let ANIMATE = false;
 let SHOW_CENTER = false;
 let z = 0;
 
-if (document.querySelector('.show-center').checked) {
-  SHOW_CENTER = true;
-}
-
 const canvas = document.querySelector('#canvas');
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
@@ -66,15 +62,24 @@ function draw() {
 
       requestAnimationFrame(draw);
     }
-    console.log('dw');
-
   }
 }
 
 draw();
 
-const generateBtn = document.querySelector('.generate-btn');
-generateBtn.addEventListener('click', draw);
+// Config functionality
+document.querySelector('.generate-btn').addEventListener('click', () => {
+  for (let point of points) {
+    point.x = random(WIDTH);
+    point.y = random(HEIGHT);
+  }
+  draw();
+});
+
+document.querySelector('.show-center').addEventListener('change', () => {
+  if (SHOW_CENTER) SHOW_CENTER = false
+  else SHOW_CENTER = true;
+})
 
 // Util functions
 function random(max) {
