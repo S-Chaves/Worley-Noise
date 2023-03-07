@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&display=swap');
+
 *,
 *::after,
 *::before {
@@ -7,22 +9,43 @@
 }
 
 body {
-  background-color: rgb(63, 63, 63);
+  font-family: 'PT Sans Narrow', sans-serif;
 }
 
 .title {
   text-align: center;
   margin-top: 2rem;
+  font-size: 3em;
 }
 
 .container {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 3rem;
   margin-inline: auto;
-  margin-top: 2rem;
+  margin-top: 3rem;
   width: fit-content;
 
+}
+
+.config {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 8rem;
+  font-size: 1.3em;
+}
+
+.config label {
+  display: flex;
+  justify-content: space-between;
+}
+
+.generate-btn {
+  margin-top: 0.8rem;
+  margin-inline: auto;
+  width: fit-content;
+  padding: 0.3rem 0.8rem;
 }
 
 #canvas {

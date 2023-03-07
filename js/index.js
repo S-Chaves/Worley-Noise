@@ -4,8 +4,10 @@ const WIDTH = 150;
 const HEIGHT = 150;
 const POINT_AMOUNT = 10;
 const POINT_POS = 0;
+let COLORS = [0, 255];
 let ANIMATE = false;
 let SHOW_CENTER = false;
+let animation;
 let z = 0;
 
 const canvas = document.querySelector('#canvas');
@@ -36,7 +38,7 @@ function draw() {
         }
         dists = dists.sort((a, b) => a - b);
         // Paint each pixel acording to the noise
-        const noise = map(dists[POINT_POS], 0, WIDTH / 2, 0, 255);
+        const noise = map(dists[POINT_POS], 0, WIDTH / 2, COLORS[0], COLORS[1]);
 
         ctx.fillStyle = `rgb(${noise},${noise},${noise})`;
         ctx.fillRect(x, y, 1, 1);
@@ -59,9 +61,9 @@ function draw() {
 
         point.move(x, y, z);
       }
-
-      requestAnimationFrame(draw);
     }
+
+    animation = requestAnimationFrame(draw);
   }
 }
 
@@ -73,13 +75,25 @@ document.querySelector('.generate-btn').addEventListener('click', () => {
     point.x = random(WIDTH);
     point.y = random(HEIGHT);
   }
+
+  window.cancelAnimationFrame(animation);
   draw();
 });
 
 document.querySelector('.show-center').addEventListener('change', () => {
-  if (SHOW_CENTER) SHOW_CENTER = false
+  if (SHOW_CENTER) SHOW_CENTER = false;
   else SHOW_CENTER = true;
-})
+});
+
+document.querySelector('.animate').addEventListener('change', () => {
+  if (ANIMATE) ANIMATE = false;
+  else ANIMATE = true;
+});
+
+document.querySelector('.invert').addEventListener('change', () => {
+  if (COLORS[0]) COLORS = [0, 255]
+  else COLORS = [255, 0];
+});
 
 // Util functions
 function random(max) {
