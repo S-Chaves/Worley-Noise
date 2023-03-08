@@ -3,13 +3,12 @@ class Point {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.dir =  Math.floor(Math.random() * 360);
+    this.dir = Math.floor(Math.random() * 360);
   }
 
-  move(x, y, z) {
-    this.x += x;
-    this.y += y;
-    this.z += z;
+  move(x, y) {
+    this.x = x;
+    this.y = y;
   }
 }
 
