@@ -1,13 +1,13 @@
 import Point from "./Point.js";
 
-const WIDTH = 150;
-const HEIGHT = 150;
-const POINT_AMOUNT = 10;
-const POINT_POS = 0;
-let COLORS = [0, 255];
-let ANIMATE = false;
-let SHOW_CENTER = false;
-let animation;
+const WIDTH = 400;
+const HEIGHT = 400;
+const POINT_AMOUNT = 10; // Amount of points
+let COLORS = [255, 0]; // Start and end colors
+let MOV_AMOUNT = 1; // Amount of pixel movement in animate
+let ANIMATE = false; // If true it moves
+let SHOW_CENTER = false; // If true the centers are shown
+let animation; // Instance of requestAnimationFrame
 let z = 0;
 
 const canvas = document.querySelector('#canvas');
@@ -22,42 +22,38 @@ for (let i = 0; i < POINT_AMOUNT; i++) {
 
 function draw() {
   if (canvas.getContext) {
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false });
 
     ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
     // if (z === WIDTH) z = 0;
     // else z += 2;
 
-    for (let x = 0; x < WIDTH; x++) {
-      for (let y = 0; y < HEIGHT; y++) {
-        let dists = [];
-        // Calculate distance to all points for every pixel
-        for (let i = 0; i < points.length; i++) {
-          dists[i] = dist(x, y, points[i].x, points[i].y);
-        }
-        dists = dists.sort((a, b) => a - b);
-        // Paint each pixel acording to the noise
-        const noise = map(dists[POINT_POS], 0, WIDTH / 2, COLORS[0], COLORS[1]);
+    const imageData = ctx.createImageData(3, 3);
 
-        ctx.fillStyle = `rgb(${noise},${noise},${noise})`;
-        ctx.fillRect(x, y, 1, 1);
+    for (let x = 0; x < WIDTH; x += 3) {
+      for (let y = 0; y < HEIGHT; y += 3) {
+        const dist = getDist(x, y);
+        const noise = map(dist, 0, WIDTH / 2, COLORS[0], COLORS[1]);
+
+        // Paint each pixel acording to the noise
+        changeImgDataColor(imageData.data, noise, noise, noise);
+        ctx.putImageData(imageData, x, y);
       }
     }
     // Shows points with red
     if (SHOW_CENTER) {
       for (let point of points) {
-        ctx.fillStyle = "rgb(255,0,0)";
-        ctx.fillRect(point.x, point.y, 2, 2);
+        changeImgDataColor(imageData.data, 255, 0, 0);
+        ctx.putImageData(imageData, point.x, point.y);
       }
     }
     // Points move every frame
     if (ANIMATE) {
-      const amount = 1;
       for (let point of points) {
-        const x = Math.random() < 0.5 ? -amount : amount;
-        const y = Math.random() < 0.5 ? -amount : amount;
-        const z = Math.random() < 0.5 ? -amount : amount;
+        const x = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
+        const y = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
+        const z = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
 
         point.move(x, y, z);
       }
@@ -91,13 +87,32 @@ document.querySelector('.animate').addEventListener('change', () => {
 });
 
 document.querySelector('.invert').addEventListener('change', () => {
-  if (COLORS[0]) COLORS = [0, 255]
+  if (COLORS[0]) COLORS = [0, 255];
   else COLORS = [255, 0];
 });
 
 // Util functions
 function random(max) {
   return Math.floor(Math.random() * max);
+}
+
+function changeImgDataColor(data, r, g, b) {
+  for (let i = 0; i < data.length; i += 4) {
+    // Modify pixel data
+    data[i + 0] = r; // R value
+    data[i + 1] = g; // G value
+    data[i + 2] = b; // B value
+  }
+}
+
+function getDist(x, y) {
+  let min = Infinity;
+  // Calculate distance to all points for every pixel
+  for (let i = 0; i < points.length; i++) {
+    const distance = dist(x, y, points[i].x, points[i].y);
+    if (distance < min) min = distance;
+  }
+  return min;
 }
 
 function dist(x1, y1, x2, y2) {
