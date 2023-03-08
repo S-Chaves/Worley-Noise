@@ -4,7 +4,7 @@ const WIDTH = 400;
 const HEIGHT = 400;
 const POINT_AMOUNT = 10; // Amount of points
 let COLORS = [255, 0]; // Start and end colors
-let MOV_AMOUNT = 1; // Amount of pixel movement in animate
+let MOV_AMOUNT = 5; // Amount of pixel movement in animate
 let ANIMATE = false; // If true it moves
 let SHOW_CENTER = false; // If true the centers are shown
 let animation; // Instance of requestAnimationFrame
@@ -41,7 +41,7 @@ function draw() {
         ctx.putImageData(imageData, x, y);
       }
     }
-    // Shows points with red
+    // Shows centers with a red dot
     if (SHOW_CENTER) {
       for (let point of points) {
         changeImgDataColor(imageData.data, 255, 0, 0);
@@ -51,9 +51,15 @@ function draw() {
     // Points move every frame
     if (ANIMATE) {
       for (let point of points) {
-        const x = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
-        const y = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
-        const z = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
+        const x = MOV_AMOUNT * Math.cos(Math.PI * point.dir / 180.0);
+        const y = MOV_AMOUNT * Math.sin(Math.PI * point.dir / 180.0);
+        point.dir += random(10);
+
+        // const z = MOV_AMOUNT;
+
+        // const x = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
+        // const y = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
+        // const z = Math.random() < 0.5 ? -MOV_AMOUNT : MOV_AMOUNT;
 
         point.move(x, y, z);
       }
