@@ -11,6 +11,7 @@ let SHOW_CENTER = false; // If true the centers are shown
 let ANIMATE_3D = false; // If true z values are used
 let ANIMATE_3D_DIR = false; // Set to true when max z is reached to go down
 let animation; // Instance of requestAnimationFrame
+let MANHATTAN_DIST = false; // If true it uses manhattan distance
 let z = null;
 
 const canvas = document.querySelector('#canvas');
@@ -92,15 +93,23 @@ function getDist(x, y, z) {
   let min = Infinity;
   // Calculate distance to all points for every pixel
   for (let i = 0; i < POINT_AMOUNT; i++) {
-    const distance = dist(x, y, z, points[i].x, points[i].y, points[i].z);
+    const distance = MANHATTAN_DIST
+      ? manhattanDist(x, y, z, points[i].x, points[i].y, points[i].z)
+      : euclideanDist(x, y, z, points[i].x, points[i].y, points[i].z);
+
     if (distance < min) min = distance;
   }
   return min;
 }
 
-function dist(x1, y1, z1, x2, y2, z2) {
+function euclideanDist(x1, y1, z1, x2, y2, z2) {
   if (z1 === null) return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
   return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2);
+}
+
+function manhattanDist(x1, y1, z1, x2, y2, z2) {
+  if (z1 == null) return Math.abs(x2 - x1) + Math.abs(y2 - y1);
+  return Math.abs(x2 - x1) + Math.abs(y2 - y1) + Math.abs(z2 - z1);
 }
 
 function random(max) {
@@ -150,6 +159,10 @@ document.querySelector('.animation-3d').addEventListener('change', () => {
     z = null;
   }
   else ANIMATE_3D = true;
+});
+
+document.querySelector('.manhattan').addEventListener('change', () => {
+  MANHATTAN_DIST = !MANHATTAN_DIST;
 });
 
 document.querySelector('.amount-points').addEventListener('change', (e) => {
